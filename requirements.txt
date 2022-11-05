@@ -1,0 +1,11 @@
+paho-mqtt~=1.6.1
+psutil~=5.9.3
+qi~=1.8.3
+PyAudio~=0.2.11
+statistics~=1.0.3.5
+numpy~=1.16.6
+opencv-python~=4.2.0.32
+dlib~=19.24.0
+imutils~=0.5.4
+Pillow~=6.2.2
+bleedfacedetector~=1.0.17
