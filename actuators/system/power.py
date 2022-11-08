@@ -3,6 +3,8 @@ import traceback
 import utils.constants as Constants
 from actuators.actuator import Actuator
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.actuators.system.power")
 
 class Power(Actuator):
     def __init__(self, nao_interface,  id, mqtt_topic, qi_app):
@@ -15,6 +17,6 @@ class Power(Actuator):
                 system = self.session.service("ALSystem")
                 system.shutdown()
             except Exception:
-                print(traceback.format_exc())
-                print("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot shut a virtual robot down.")
+                logger.warning(traceback.format_exc())
+                logger.warning("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot shut a virtual robot down.")
                 pass

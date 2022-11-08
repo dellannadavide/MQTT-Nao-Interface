@@ -5,6 +5,9 @@ import vision_definitions
 from PIL import Image
 import numpy as np
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.sensors.video.naoimagecollector")
+
 class NaoImageCollector(Sensor):
     """
     A simple class to compute data about face position

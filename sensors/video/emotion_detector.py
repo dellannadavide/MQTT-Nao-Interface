@@ -7,6 +7,9 @@ import time
 from sensors.sensor import Sensor
 import utils.constants as Constants
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.sensors.video.emotion_detector")
+
 class EmotionDetector(Sensor):
     """
         A simple class to compute data about face emotion
@@ -55,7 +58,7 @@ class EmotionDetector(Sensor):
                 predicted_emotion = self.emotions[prob.argmax()].lower()
                 # Print the target Emotion
                 if not predicted_emotion == "neutral":
-                    print('Emotion is: {}'.format(predicted_emotion))
+                    logger.info('Emotion is: {}'.format(predicted_emotion))
                     return predicted_emotion
                 else:
                     return None

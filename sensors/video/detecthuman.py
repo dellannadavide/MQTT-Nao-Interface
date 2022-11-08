@@ -19,6 +19,8 @@ import utils.util
 from sensors.sensor import Sensor
 from utils.mqttclient import MQTTClient
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.sensors.video.detecthuman")
 
 class HumanDetector(Sensor):
     """
@@ -43,10 +45,10 @@ class HumanDetector(Sensor):
 
 
     def sense(self):
-        print("faces: ", self.faces)
+        logger.info("faces: ", self.faces)
         if len(self.faces)>0:
             to_ret = utils.util.joinStrings(self.faces)
-            print(to_ret)
+            logger.info(to_ret)
             if not self.last_seen == to_ret:
                 self.last_seen = to_ret
                 # to_ret = str(self.faces)
@@ -88,7 +90,7 @@ class HumanDetector(Sensor):
                         # print("unknown")
                         self.got_faces = True
                         self.faces.append("unknown")
-                        print("detected unknown")
+                        logger.info("detected unknown")
                 elif (len(self.timeFilteredResult) == 2):
                     # If one or several faces have been recognized
                     if (self.timeFilteredResult[0] in [2, 3]):
@@ -97,4 +99,4 @@ class HumanDetector(Sensor):
                             # print(s)
                             self.got_faces = True
                             self.faces.append(s)
-                            print("detected "+str(s))
+                            logger.info("detected "+str(s))

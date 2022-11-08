@@ -4,6 +4,8 @@ import traceback
 import utils.constants as Constants
 from actuators.actuator import Actuator
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.actuators.posture.posture")
 
 class PostureActuator(Actuator):
     def __init__(self, nao_interface, id, mqtt_topic, qi_app, virtual=False):
@@ -12,8 +14,8 @@ class PostureActuator(Actuator):
 
     def actuate(self, directive):
         splitted_directive = directive.split(Constants.STRING_SEPARATOR)
-        print(splitted_directive)
-        print(splitted_directive[0] == Constants.DIRECTIVE_GOTOPOSTURE)
+        logger.info(splitted_directive)
+        logger.info(splitted_directive[0] == Constants.DIRECTIVE_GOTOPOSTURE)
         if not self.nao_interface.is_moving:
             self.nao_interface.is_moving = True
             if splitted_directive[0] == Constants.DIRECTIVE_GOTOPOSTURE:
@@ -21,8 +23,8 @@ class PostureActuator(Actuator):
                 try:
                     self.services[Constants.NAO_SERVICE_POSTURE].goToPosture(posture, self.speed)
                 except Exception:
-                    print(traceback.format_exc())
-                    print("Could not perform directive "+str(splitted_directive))
+                    logger.warning(traceback.format_exc())
+                    logger.warning("Could not perform directive "+str(splitted_directive))
                     pass
             if splitted_directive[0] == Constants.DIRECTIVE_PLAYANIMATION:
                 animation = str(splitted_directive[1]) #
@@ -42,15 +44,15 @@ class PostureActuator(Actuator):
                     # wait the end of the animation
                     # future.value()
                 except Exception:
-                    print(traceback.format_exc())
-                    print("Could not perform directive "+str(splitted_directive))
+                    logger.warning(traceback.format_exc())
+                    logger.warning("Could not perform directive "+str(splitted_directive))
                     pass
 
                 try:
                     self.services[Constants.NAO_SERVICE_POSTURE].goToPosture("Stand", self.speed)
                 except Exception:
-                    print(traceback.format_exc())
-                    print("Could not perform directive "+str(splitted_directive))
+                    logger.warning(traceback.format_exc())
+                    logger.warning("Could not perform directive "+str(splitted_directive))
                     pass
 
             self.nao_interface.is_moving = False

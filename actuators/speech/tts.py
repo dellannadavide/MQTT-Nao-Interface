@@ -6,6 +6,8 @@ import traceback
 import utils.constants as Constants
 from actuators.actuator import Actuator
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.actuators.speech.tts")
 
 class TextToSpeech(Actuator):
     def __init__(self, nao_interface, id, mqtt_topic, qi_app, virtual=False):
@@ -20,7 +22,7 @@ class TextToSpeech(Actuator):
 
     def actuate(self, directive):
         splitted_directive = directive.split(Constants.STRING_SEPARATOR)
-        print(splitted_directive)
+        logger.info(str(splitted_directive))
         if splitted_directive[0] == "say":
             try:
                 # sentence = "\RSPD=" + str(tts.getParameter("Speed (%)")) + "\ "
@@ -28,18 +30,18 @@ class TextToSpeech(Actuator):
                 sentence = str(splitted_directive[1])
                 if splitted_directive[2] == "volume":
                     volume = round(float(splitted_directive[3])/100.0,2)
-                    print("-> setting volume to "+str(volume))
+                    logger.info("-> setting volume to "+str(volume))
                     self.services[Constants.NAO_SERVICE_TTS].setVolume(volume)
                 else:
                     self.services[Constants.NAO_SERVICE_TTS].setVolume(self.default_volume)
                 # sentence += "\RST\ "
-                print("-> "+str(sentence))
+                logger.info("-> "+str(sentence))
                 self.say(str(sentence))
 
 
             except Exception:
-                print(traceback.format_exc())
-                print("Could not perform directive ", splitted_directive)
+                logger.warning(traceback.format_exc())
+                logger.warning("Could not perform directive ", splitted_directive)
                 pass
 
     def say(self, sentence):

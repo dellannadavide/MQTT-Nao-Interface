@@ -5,6 +5,8 @@ from utils.mqttclient import MQTTClient
 import utils.constants as Constants
 import time
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.sensors.sensor")
 
 class Sensor(threading.Thread):
     def __init__(self, nao_interface, id, mqtt_topic, nao_services, freq, qi_app=None, virtual=False):
@@ -35,7 +37,7 @@ class Sensor(threading.Thread):
                 try:
                     self.services[s] = self.session.service(s)
                 except:
-                    print("WARNING: Cannot find service " + str(s))
+                    logger.warning("Cannot find service " + str(s))
 
     def subscribe(self, name_service, name_subscriber, *args):
         try:
@@ -79,15 +81,15 @@ class Sensor(threading.Thread):
                 try:
                     data_to_publish = self.sense()
                 except (RuntimeError, KeyError) as re:
-                    print(traceback.format_exc())
-                    print("Runtime or Key Error. Waiting 5 seconds and then rebooting...")
+                    logger.error(traceback.format_exc())
+                    logger.error("Runtime or Key Error. Waiting 5 seconds and then rebooting...")
                     time.sleep(5)
                     self.handleRUntimeException()
                     # self.app = self.nao_interface.startQIAPP()
                     # self.connectServices()
                     # self.subscribeToServices()
                 except:
-                    print(traceback.format_exc())
+                    logger.warning(traceback.format_exc())
                     pass
 
                 if not data_to_publish is None and not self.mqtt_topic is None:

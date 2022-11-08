@@ -12,6 +12,8 @@ from sensors.sensor import Sensor
 import utils.constants as Constants
 from utils.util import joinStrings
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.sensors.audio.speechrecognizer")
 
 class SpeechRecognizer(Sensor):
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None, micenergy=None, virtual=False):
@@ -38,7 +40,7 @@ class SpeechRecognizer(Sensor):
 
     def sense(self):
         if self.nao_interface.is_speaking:
-            print("Nao is speaking, sleeping for 1 sec")
+            logger.info("Nao is speaking, sleeping for 1 sec")
             time.sleep(1)
             return None
         try:
@@ -46,7 +48,7 @@ class SpeechRecognizer(Sensor):
                 if not self.micenergy is None:
                     self.micenergy.collectEnergyLevels()
                 if self.idx>0:
-                    print("listening " + str(self.idx))
+                    logger.info("listening " + str(self.idx))
                 self.idx = self.idx + 1
                 if not self.virtual:
                     if self.idx > 0: #i skip the first green light so to avoid possible issues
@@ -56,7 +58,7 @@ class SpeechRecognizer(Sensor):
                     self.nao_interface.services["LedsActuator"].setColor("white")
 
         except Exception:
-            print(traceback.format_exc())
+            logger.warning(traceback.format_exc())
             return None
 
         # if not self.micenergy is None:
@@ -79,7 +81,7 @@ class SpeechRecognizer(Sensor):
         if not det == "":
             to_ret = joinStrings([det,str(db)], Constants.STRING_SEPARATOR_INNER)
             # print(to_ret)
-            print("Detected speech info: ", to_ret)
+            logger.info("Detected speech info: {}".format(to_ret))
             # print(audio.get_raw_data())
             return to_ret
         else:

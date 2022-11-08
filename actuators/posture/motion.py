@@ -5,6 +5,8 @@ import traceback
 import utils.constants as Constants
 from actuators.actuator import Actuator
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.actuators.posture.motion")
 
 class MotionActuator(Actuator):
     def __init__(self, nao_interface, id, mqtt_topic, qi_app, virtual=False):
@@ -13,8 +15,8 @@ class MotionActuator(Actuator):
 
     def actuate(self, directive):
         splitted_directive = directive.split(Constants.STRING_SEPARATOR)
-        print(splitted_directive)
-        print(splitted_directive[0] == Constants.DIRECTIVE_MOVEHEAD)
+        logger.info(splitted_directive)
+        logger.info(splitted_directive[0] == Constants.DIRECTIVE_MOVEHEAD)
         if splitted_directive[0] == Constants.DIRECTIVE_MOVEHEAD:
             if not self.nao_interface.is_looking and not self.nao_interface.is_moving:
                 self.nao_interface.is_looking = True
@@ -30,8 +32,8 @@ class MotionActuator(Actuator):
                     self.services[Constants.NAO_SERVICE_MOTION].setAngles("HeadYaw", 0.0, self.speed)
                     self.services[Constants.NAO_SERVICE_MOTION].setAngles("HeadPitch", 0.0, self.speed)
                 except Exception:
-                    print(traceback.format_exc())
-                    print("Could not perform directive "+str(splitted_directive))
+                    logger.warning(traceback.format_exc())
+                    logger.warning("Could not perform directive "+str(splitted_directive))
                     pass
                 self.nao_interface.is_looking = False
                 # self.nao_interface.is_moving = False

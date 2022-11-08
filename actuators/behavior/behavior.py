@@ -4,6 +4,8 @@ import traceback
 import utils.constants as Constants
 from actuators.actuator import Actuator
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.actuators.behavior.behavior")
 
 class BehaviorActuator(Actuator):
     def __init__(self, nao_interface, id, mqtt_topic, qi_app, virtual=False):
@@ -20,12 +22,12 @@ class BehaviorActuator(Actuator):
 
     def actuate(self, directive):
         splitted_directive = directive.split(Constants.STRING_SEPARATOR)
-        print("actuate")
+        logger.info("actuate")
         self.services[Constants.NAO_SERVICE_MEMORY].raiseEvent(Constants.NAO_EVENT_TRIGGER_LEARN_FACE, "Davide")
 
     def on_event(self, value):
-        print("on event")
-        print(value)
+        logger.info("on event")
+        logger.info(value)
         self.getBehaviors()
 
 
@@ -35,12 +37,12 @@ class BehaviorActuator(Actuator):
         """
 
         names = self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].getInstalledBehaviors()
-        print "Behaviors on the robot:"
-        print names
+        logger.info("Behaviors on the robot:")
+        logger.info(names)
 
         names = self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].getRunningBehaviors()
-        print "Running behaviors:"
-        print names
+        logger.info("Running behaviors:")
+        logger.info(names)
 
     def launchAndStopBehavior(self, behavior_name):
         """
@@ -55,26 +57,26 @@ class BehaviorActuator(Actuator):
                 self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].runBehavior(behavior_name, _async=True)
                 time.sleep(0.5)
             else:
-                print "Behavior is already running."
+                logger.info("Behavior is already running.")
 
         else:
-            print "Behavior not found."
+            logger.warning("Behavior not found.")
             return
 
         names = self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].getRunningBehaviors()
-        print "Running behaviors:"
-        print names
+        logger.info("Running behaviors:")
+        logger.info(names)
 
         # Stop the behavior.
         if (self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].isBehaviorRunning(behavior_name)):
             self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].stopBehavior(behavior_name)
             time.sleep(1.0)
         else:
-            print "Behavior is already stopped."
+            logger.info("Behavior is already stopped.")
 
         names = self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].getRunningBehaviors()
-        print "Running behaviors:"
-        print names
+        logger.info("Running behaviors:")
+        logger.info(names)
 
     def defaultBehaviors(self, behavior_name):
         """
@@ -83,19 +85,19 @@ class BehaviorActuator(Actuator):
 
         # Get default behaviors.
         names = self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].getDefaultBehaviors()
-        print "Default behaviors:"
-        print names
+        logger.info("Default behaviors:")
+        logger.info(names)
 
         # Add behavior to default.
         self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].addDefaultBehavior(behavior_name)
 
         names = self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].getDefaultBehaviors()
-        print "Default behaviors:"
-        print names
+        logger.info("Default behaviors:")
+        logger.info(names)
 
         # Remove behavior from default.
         self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].removeDefaultBehavior(behavior_name)
 
         names = self.services[Constants.NAO_SERVICE_BEHAVIOR_MANAGER].getDefaultBehaviors()
-        print "Default behaviors:"
-        print names
+        logger.info("Default behaviors:")
+        logger.info(names)

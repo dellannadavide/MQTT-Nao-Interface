@@ -6,6 +6,9 @@ from utils.mqttclient import MQTTClient
 from time import sleep
 import utils.constants as Constants
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.actuators.actuator")
+
 class Actuator(threading.Thread):
     def __init__(self, nao_interface, id, mqtt_topic, nao_services, qi_app=None, virtual=False):
         super(Actuator, self).__init__()
@@ -33,13 +36,12 @@ class Actuator(threading.Thread):
                 try:
                     self.services[s] = self.session.service(s)
                 except:
-                    print("WARNING: Cannot find service "+str(s))
+                    logger.warning("Cannot find service "+str(s))
 
     def on_message(self, client, userdata, message):
         rec_m = str(message.payload.decode("utf-8"))
-        print("received message: ", rec_m)
+        logger.info("received message: {}".format(rec_m))
         self.received_directives.insert(0, rec_m)
-        # print(self.received_directives)
 
     def getDirective(self):
         directive_list_from_oldest = []
@@ -75,8 +77,8 @@ class Actuator(threading.Thread):
                         for p in directive_list:
                             self.actuate(p)
                 except RuntimeError:
-                    print(traceback.format_exc())
-                    print("Runtime or Key Error. Waiting 5 seconds and then rebooting...")
+                    logger.error(traceback.format_exc())
+                    logger.error("Runtime or Key Error. Waiting 5 seconds and then rebooting...")
                     time.sleep(5)
                     self.handleRUntimeException()
                     # self.app = self.nao_interface.startQIAPP()

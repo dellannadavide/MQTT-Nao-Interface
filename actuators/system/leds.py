@@ -3,6 +3,8 @@ import traceback
 import utils.constants as Constants
 from actuators.actuator import Actuator
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.actuators.system.leds")
 
 class Leds(Actuator):
     def __init__(self, nao_interface, id, mqtt_topic, qi_app):
@@ -55,7 +57,7 @@ class Leds(Actuator):
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 1.0)
             self.current_color = color
         else:
-            print("Warning!!! Color ", color, "unknown.")
+            logger.warning("Color " + str(color) +" unknown.")
 
     def setColor(self, color, external_command=False):
         try:
@@ -82,6 +84,6 @@ class Leds(Actuator):
                 new_col = splitted_directive[1]
                 self.setColor(new_col, external_command=True)
         except Exception:
-            print(traceback.format_exc())
-            print("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot use leds")
+            logger.warning(traceback.format_exc())
+            logger.warning("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot use leds")
             pass

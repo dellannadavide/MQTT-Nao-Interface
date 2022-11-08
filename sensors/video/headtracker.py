@@ -26,6 +26,9 @@ import dlib  # Machine learning library
 import imutils  # OpenCV assistance
 from imutils import face_utils
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.sensors.video.headtracker")
+
 class HeadTracker(Sensor):
     """
     A simple class to compute data about face position
@@ -71,8 +74,8 @@ class HeadTracker(Sensor):
             self.Known_distance, self.Known_width_eyes, self.ref_image_eyes_width)
         # self.Focal_length_found_mouth = self.Focal_Length_Finder(
         #     self.Known_distance, self.Known_width_mouth, self.ref_image_mouth_width)
-        print(self.Focal_length_found_face)
-        print(self.Focal_length_found_eyes)
+        logger.info("Focal length face "+str(self.Focal_length_found_face))
+        logger.info("Focal length eyes "+str(self.Focal_length_found_eyes))
         # print(self.Focal_length_found_mouth)
 
     def sense(self):
@@ -216,7 +219,7 @@ class HeadTracker(Sensor):
                                    str(float(estimated_distance))]
             list_retval
             ret_val = joinStrings(list_retval, Constants.STRING_SEPARATOR_INNER)
-            print(list_retval)
+            logger.info(list_retval)
             return ret_val
 
     def face_data(self, gray_image):

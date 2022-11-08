@@ -27,6 +27,9 @@ import dlib  # Machine learning library
 import imutils  # OpenCV assistance
 from imutils import face_utils
 
+import logging
+logger = logging.getLogger("mqtt-nao-interface.sensors.video.object_detector")
+
 class ObjectDetector(Sensor):
     """
     A simple class to compute data about face position
@@ -157,7 +160,7 @@ class ObjectDetector(Sensor):
                         detected_objects.append(predicted_class_label)
                         predicted_class_label = "{}: {:.2f}%".format(predicted_class_label,
                                                                      prediction_confidence * 100)
-                        print("predicted object {}".format(predicted_class_label))
+                        logger.info("predicted object {}".format(predicted_class_label))
 
 
                         # # draw rectangle and text in the image
