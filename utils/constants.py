@@ -58,6 +58,7 @@ DIRECTIVE_MOVEHEAD = "move_head"
 DIRECTIVE_PLAYANIMATION = "play_animation"
 DIRECTIVE_LED_CHANGE_COLOR = "change_led_color"
 DIRECTIVE_LED_SET_COLOR = "set_led_color"
+DIRECTIVE_LED_SET_THINKING = "set_led_thinking_color"
 
 COLORS_BLUE = "blue"
 COLORS_WHITE = "white"

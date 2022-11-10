@@ -22,7 +22,7 @@ class EmotionDetector(Sensor):
         # Now read the model
         self.net = cv2.dnn.readNetFromONNX(self.model)
 
-        self.emotions = ['Neutral', 'Happy', 'Surprise', 'Sad', 'Anger', 'Disgust', 'Fear', 'Contempt']
+        self.emotions = ['Neutral', 'Happy', 'Surprised', 'Sad', 'Angry', 'Disgusted', 'Fearful', 'Contempt']
 
         self.lastImage = None
 
@@ -56,11 +56,13 @@ class EmotionDetector(Sensor):
                 # print(prob)
                 # emotions list you created above.
                 predicted_emotion = self.emotions[prob.argmax()].lower()
+                print(predicted_emotion)
                 # Print the target Emotion
                 if not predicted_emotion == "neutral":
                     logger.info('Emotion is: {}'.format(predicted_emotion))
                     return predicted_emotion
                 else:
+
                     return None
             else:
                 return None

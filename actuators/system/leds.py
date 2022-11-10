@@ -26,9 +26,6 @@ class Leds(Actuator):
             self.current_color = self.initial_color
             self.nao_interface.is_thinking = False
 
-    def isThinking(self):
-        return self.current_color == self.thinking_color
-
     def setColorExternal(self, color):
         if color==self.thinking_color:
             self.setThinking(True)
@@ -64,7 +61,7 @@ class Leds(Actuator):
             if external_command:
                 self.setColorExternal(color)
             else:
-                if not self.isThinking():
+                if not self.nao_interface.is_thinking:
                     self.setColorInner(color)
         except RuntimeError:
             self.handleRUntimeException()
@@ -83,6 +80,11 @@ class Leds(Actuator):
             if splitted_directive[0] == Constants.DIRECTIVE_LED_SET_COLOR:
                 new_col = splitted_directive[1]
                 self.setColor(new_col, external_command=True)
+
+            if splitted_directive[0] == Constants.DIRECTIVE_LED_SET_THINKING:
+                thinking = bool(splitted_directive[1])
+                self.setThinking(thinking)
+
         except Exception:
             logger.warning(traceback.format_exc())
             logger.warning("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot use leds")
