@@ -87,10 +87,9 @@
             <translation type="obsolete">Yes sir! it is indeed true! sir!</translation>
         </message>
         <message>
-            <location filename="test/behavior.xar" line="0"/>
             <source>Anyways, sir! what's the temperature today? sir </source>
             <comment>Text</comment>
-            <translation type="unfinished">Anyways, sir! what's the temperature today? sir </translation>
+            <translation type="obsolete">Anyways, sir! what's the temperature today? sir </translation>
         </message>
     </context>
 </TS>

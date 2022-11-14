@@ -40,7 +40,7 @@ class Actuator(threading.Thread):
 
     def on_message(self, client, userdata, message):
         rec_m = str(message.payload.decode("utf-8"))
-        logger.info("received message: {}".format(rec_m))
+        logger.info("{} received message: {}".format(self.__class__.__name__, rec_m))
         self.received_directives.insert(0, rec_m)
 
     def getDirective(self):

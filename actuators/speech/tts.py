@@ -25,6 +25,11 @@ class TextToSpeech(Actuator):
         logger.info(str(splitted_directive))
         if splitted_directive[0] == "say":
             try:
+                logger.debug("Setting is_speaking to True")
+                self.nao_interface.is_speaking = True
+                if self.nao_interface.is_listening:  # if I start saying something while audio is being captured, then I set to discard such a thing later
+                    self.nao_interface.discard_last_audio = True
+
                 # sentence = "\RSPD=" + str(tts.getParameter("Speed (%)")) + "\ "
                 # sentence += "\VCT=" + str(tts.getParameter("Voice shaping (%)")) + "\ "
                 sentence = str(splitted_directive[1])
@@ -34,18 +39,28 @@ class TextToSpeech(Actuator):
                     self.services[Constants.NAO_SERVICE_TTS].setVolume(volume)
                 else:
                     self.services[Constants.NAO_SERVICE_TTS].setVolume(self.default_volume)
+
+                if len(splitted_directive)>5 and splitted_directive[4] == "emotion":
+                    if splitted_directive[5] == "joy":
+                        sentence = "\\style=playful\\ "+sentence
+
+
                 # sentence += "\RST\ "
                 logger.info("-> "+str(sentence))
                 self.say(str(sentence))
+
+                self.nao_interface.is_speaking = False
+                logger.debug("Setting is_speaking to False")
 
 
             except Exception:
                 logger.warning(traceback.format_exc())
                 logger.warning("Could not perform directive ", splitted_directive)
+                self.nao_interface.is_speaking = False
                 pass
 
     def say(self, sentence):
-        self.nao_interface.is_speaking = True
+
         # print("is speaking")
         sub_sentences = sentence.split(".")
         for ss in sub_sentences:
@@ -66,7 +81,7 @@ class TextToSpeech(Actuator):
         #     self.services[Constants.NAO_SERVICE_TTS].wait(id)
         #     self.is_first_tts = False
 
-        self.nao_interface.is_speaking = False
+
         # print("is not speaking")
 
 

@@ -67,6 +67,7 @@ class Leds(Actuator):
             self.handleRUntimeException()
 
     def actuate(self, directive):
+        logger.debug("Actuatinig directive {}".format(directive))
         splitted_directive = directive.split(Constants.STRING_SEPARATOR)
         try:
             if splitted_directive[0] == Constants.DIRECTIVE_LED_CHANGE_COLOR:
@@ -82,7 +83,8 @@ class Leds(Actuator):
                 self.setColor(new_col, external_command=True)
 
             if splitted_directive[0] == Constants.DIRECTIVE_LED_SET_THINKING:
-                thinking = bool(splitted_directive[1])
+                thinking = (splitted_directive[1] == "True")
+                logger.debug("setting thinking to {}".format(thinking))
                 self.setThinking(thinking)
 
         except Exception:

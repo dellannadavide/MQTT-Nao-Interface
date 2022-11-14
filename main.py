@@ -1,3 +1,4 @@
+import threading
 import traceback
 import os
 from datetime import datetime
@@ -46,6 +47,9 @@ class NaoInterface:
         self.additional_behaviors_folder = additional_behaviors_folder
         self.simulation = False
         self.is_speaking = False
+        self.is_listening = False
+        self.discard_last_audio = False
+        # self.send_audio_lock = threading.Lock()
         self.is_moving = False
         self.is_looking = False
         self.is_thinking = False
@@ -94,8 +98,8 @@ class NaoInterface:
         logger.info("Closing application")
         self.app.stop()
         logger.info("Asking to every service to prepare to close")
-        for s in self.services:
-            s.prepareToEnd()
+        for s in self.services.keys():
+            self.services[s].prepareToEnd()
         time.sleep(2)
         restart_program()
 
@@ -178,7 +182,7 @@ if __name__ == "__main__":
     #                     ])
 
 
-    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().setLevel(logging.DEBUG)
 
     logFormatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
@@ -204,7 +208,7 @@ if __name__ == "__main__":
     # additional_behaviors_folder = "nao_additional_behaviors-2870f3"
     #IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
     ip = "localhost"
-    port = 52497
+    port = 52745
     virtual = True
     additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
 

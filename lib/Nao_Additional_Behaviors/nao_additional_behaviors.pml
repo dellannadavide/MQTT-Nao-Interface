@@ -24,6 +24,9 @@
     <Dialogs />
     <Resources>
         <File name="elephant" src="behaviors/anim/elephant.ogg" />
+        <File name="swiftswords_ext" src="test/swiftswords_ext.mp3" />
+        <File name="taichimove" src="test/taichimove.pmt" />
+        <File name="mikhael-landscape-paisaje" src="test/sounds/mikhael-landscape-paisaje.ogg" />
     </Resources>
     <Topics />
     <IgnoredPaths />

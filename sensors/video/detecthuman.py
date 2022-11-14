@@ -45,7 +45,7 @@ class HumanDetector(Sensor):
 
 
     def sense(self):
-        logger.info("faces: ", self.faces)
+        logger.info("faces: {}".format(self.faces))
         if len(self.faces)>0:
             to_ret = utils.util.joinStrings(self.faces)
             logger.info(to_ret)
