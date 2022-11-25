@@ -8,7 +8,14 @@ logger = logging.getLogger("mqtt-nao-interface.actuators.system.power")
 
 class Power(Actuator):
     def __init__(self, nao_interface,  id, mqtt_topic, qi_app):
-        super(Power, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_SYSTEM], qi_app)
+        super(Power, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_SYSTEM, Constants.NAO_SERVICE_AUTONOMOUS_LIFE], qi_app)
+        self.wake_up()
+
+    def wake_up(self):
+        self.services[Constants.NAO_SERVICE_AUTONOMOUS_LIFE].setState("solitary")
+
+    def sleep(self):
+        self.services[Constants.NAO_SERVICE_AUTONOMOUS_LIFE].setState("disabled")
 
     def actuate(self, directive):
         splitted_directive = directive.split(Constants.STRING_SEPARATOR)
@@ -20,3 +27,6 @@ class Power(Actuator):
                 logger.warning(traceback.format_exc())
                 logger.warning("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot shut a virtual robot down.")
                 pass
+        if splitted_directive[0] == Constants.DIRECTIVE_SLEEP:
+            self.nao_interface.setSleeping(True)
+

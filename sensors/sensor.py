@@ -11,7 +11,7 @@ logger = logging.getLogger("mqtt-nao-interface.sensors.sensor")
 class Sensor(threading.Thread):
     def __init__(self, nao_interface, id, mqtt_topic, nao_services, freq, qi_app=None, virtual=False):
         super(Sensor, self).__init__()
-        self.is_paused = False
+        self.is_paused = True
         self.nao_interface = nao_interface
         self.id = id
         self.app = qi_app

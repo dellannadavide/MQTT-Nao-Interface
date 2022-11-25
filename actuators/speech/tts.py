@@ -51,6 +51,8 @@ class TextToSpeech(Actuator):
 
                 self.nao_interface.is_speaking = False
                 logger.debug("Setting is_speaking to False")
+                # if self.nao_interface.is_listening:
+                #     self.nao_interface.services["SpeechRecognizer"].stopListening()
 
 
             except Exception:
@@ -63,6 +65,7 @@ class TextToSpeech(Actuator):
 
         # print("is speaking")
         sub_sentences = sentence.split(".")
+        # i = 0
         for ss in sub_sentences:
             id = self.services[Constants.NAO_SERVICE_TTS].pCall("say", str(ss))
             self.services[Constants.NAO_SERVICE_TTS].wait(id)
@@ -72,14 +75,15 @@ class TextToSpeech(Actuator):
             #     tts_engine.say(str(ss))
             #     tts_engine.runAndWait()
             #     del tts_engine
-
-            time.sleep(0.1) #short pause in  betwwen subsentences
-
+            # if i<len(sub_sentences)-1:
+            #     time.sleep(0.1) #short pause in  betwwen subsentences
+            # i += 1
         # if self.is_first_tts:
         #     id = self.services[Constants.NAO_SERVICE_TTS].pCall("say",
         #                                                         "Hey, by the way, when you see that my chest becomes blue, it's because I'm thinking. Please, be patient.")
         #     self.services[Constants.NAO_SERVICE_TTS].wait(id)
         #     self.is_first_tts = False
+        logger.debug("FInished saying sentences")
 
 
         # print("is not speaking")

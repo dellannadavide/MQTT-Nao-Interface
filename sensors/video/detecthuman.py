@@ -41,7 +41,7 @@ class HumanDetector(Sensor):
     def subscribeToServices(self):
         self.subscriber = self.services[Constants.NAO_SERVICE_MEMORY].subscriber(Constants.NAO_EVENT_FACEDETECTED)
         self.subscriber.signal.connect(self.on_human_tracked)
-        self.subscribe(Constants.NAO_SERVICE_FACEDETECTION, "HumanDetector")
+        self.subscribe(Constants.NAO_SERVICE_FACEDETECTION, self.id)
 
 
     def sense(self):

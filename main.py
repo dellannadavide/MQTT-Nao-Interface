@@ -12,8 +12,10 @@ import utils.constants as Constants
 from actuators.posture.posture import PostureActuator
 from actuators.speech.tts import TextToSpeech
 from actuators.system.leds import Leds
+from actuators.system.power import Power
 from sensors.audio.mic import MicEnergyDetector
 from sensors.video.detecthuman import HumanDetector
+from sensors.video.detectobject import VisionRecognition
 from sensors.video.emotion_detector import EmotionDetector
 from sensors.video.headtracker import HeadTracker
 from sensors.video.naoimagecollector import NaoImageCollector
@@ -53,7 +55,8 @@ class NaoInterface:
         self.is_moving = False
         self.is_looking = False
         self.is_thinking = False
-        self.is_starting = False
+        self.is_sleeping = False
+        # self.is_starting = True
         self.services = {}
         self.app = None
 
@@ -103,6 +106,23 @@ class NaoInterface:
         time.sleep(2)
         restart_program()
 
+    def setSleeping(self, sleeping):
+        if sleeping:
+            self.is_sleeping = True
+            self.services["Power"].sleep()
+            self.services["LedsActuator"].setSleeping(True)
+            logger.info("Setting Nao to Sleep (it can be woken up with keywork \"wake up\"). All services but the speech recognition are paused")
+            for s in self.services.keys():
+                if not s=="SpeechRecognizer":
+                    self.services[s].pause()
+        else:
+            self.is_sleeping = False
+            self.services["Power"].wake_up()
+            self.services["LedsActuator"].setSleeping(False)
+            logger.info("Waking up Nao. All services are unpaused")
+            for s in self.services.keys():
+                self.services[s].unpause()
+
 
     def run(self):
         self.app = self.startQIAPP()
@@ -111,7 +131,6 @@ class NaoInterface:
             Here can decide which services to start (comment or uncomment)
             IMPORTANT: some of the following only work with the real robot
             """
-            # TODO TO INCLUDE THE VIDEO-RELATED ONES
 
             Constants.ADDITIONAL_BEHAVIORS_FOLDER = self.additional_behaviors_folder
 
@@ -119,23 +138,24 @@ class NaoInterface:
                 micEnDet = MicEnergyDetector(self, "MicEnergyDetector", Constants.TOPIC_MICENERGY, 0.1, self.app)
                 naoImageCollector = NaoImageCollector(self, "NaoImageCollector", None, 0.15, self.app)
                 self.services = {
+                    # ACTUATORS
+                    "TextToSpeech": TextToSpeech(self, "TextToSpeech", Constants.TOPIC_DIRECTIVE_TTS, self.app),
+                    "Power": Power(self, "Power", Constants.TOPIC_DIRECTIVE_SYSTEM, self.app),
+                    "PostureActuator": PostureActuator(self, "PostureActuator", Constants.TOPIC_POSTURE, self.app),
+                    # "MotionActuator": MotionActuator(self, "MotionActuator", Constants.TOPIC_MOTION, self.app),
+                    # BehaviorActuator(self, "BehaviorActuator", Constants.TOPIC_BEHAVIOR, app),
+                    "LedsActuator": Leds(self, "LedsActuator", Constants.TOPIC_LEDS, self.app),
                     # SENSORS
                     "MicEnergyDetector": micEnDet,
                     "NaoImageCollector": naoImageCollector,
-                    "SpeechRecognizer": SpeechRecognizer(self, "SpeechRecognizer", Constants.TOPIC_SPEECH, 0.1, micenergy=micEnDet),
+                    "SpeechRecognizer": SpeechRecognizer(self, "SpeechRecognizer", Constants.TOPIC_SPEECH, 0.01, micenergy=micEnDet),
                     "HumanDetector": HumanDetector(self, "HumanDetector", Constants.TOPIC_HUMAN_DETECTION, 3, self.app),
+                    "VisionRecognition": VisionRecognition(self, "VisionRecognition", Constants.TOPIC_OBJECT_DETECTION, 1, self.app),
                     # human greeter (incl. human detection) (ONLY FOR REAL ROBOT)
                     # DistanceDetector(self, "DistanceDetector", Constants.TOPIC_DISTANCE, 5, app),
                     "HeadTracker": HeadTracker(self, "HeadTracker", Constants.TOPIC_HEAD_TRACKER, 1, self.app),
                     "EmotionDetector": EmotionDetector(self, "EmotionDetector", Constants.TOPIC_EMOTION_DETECTION, 2, self.app),
                     "ObjectDetector":ObjectDetector(self, "ObjectDetector", Constants.TOPIC_OBJECT_DETECTION, 3, self.app),
-                    # ACTUATORS
-                    "TextToSpeech": TextToSpeech(self, "TextToSpeech", Constants.TOPIC_DIRECTIVE, self.app),
-                    # Power(self, "PowerShutter", Constants.TOPIC_DIRECTIVE, app),
-                    "PostureActuator": PostureActuator(self, "PostureActuator", Constants.TOPIC_POSTURE, self.app),
-                    # "MotionActuator": MotionActuator(self, "MotionActuator", Constants.TOPIC_MOTION, self.app),
-                    # BehaviorActuator(self, "BehaviorActuator", Constants.TOPIC_BEHAVIOR, app),
-                    "LedsActuator": Leds(self, "LedsActuator", Constants.TOPIC_LEDS, self.app)
                 }
             else:
                 naoImageCollector = NaoImageCollector(self, "NaoImageCollector", None, 0.15, self.app, virtual=True)
@@ -148,7 +168,7 @@ class NaoInterface:
                     "ObjectDetector":ObjectDetector(self, "ObjectDetector", Constants.TOPIC_OBJECT_DETECTION, 1, virtual=True),
                     # DistanceDetector(self, "DistanceDetector", Constants.TOPIC_DISTANCE, 1, app, virtual=True), #0.2
                     # ACTUATORS
-                    "TextToSpeech": TextToSpeech(self, "TextToSpeech", Constants.TOPIC_DIRECTIVE, self.app, virtual=True),
+                    "TextToSpeech": TextToSpeech(self, "TextToSpeech", Constants.TOPIC_DIRECTIVE_TTS, self.app, virtual=True),
                     "PostureActuator": PostureActuator(self, "PostureActuator", Constants.TOPIC_POSTURE, self.app), #doesn't require the virtual to be true?
                     # "MotionActuator": MotionActuator(self, "MotionActuator", Constants.TOPIC_MOTION, self.app, virtual=True)
                     # BehaviorActuator(self, "BehaviorActuator", Constants.TOPIC_BEHAVIOR, app, virtual=True)
@@ -159,6 +179,10 @@ class NaoInterface:
             for s in self.services.keys():
                 self.services[s].start()
                 # run_functions.append(s.run)
+
+            # self.is_starting = False
+            for s in self.services.keys():
+                self.services[s].unpause()
             # runInParallel2(*run_functions)
             # print("WARNING you disabled speechrecognizer in the virtual robot")
         else:
@@ -207,10 +231,10 @@ if __name__ == "__main__":
     # virtual = False
     # additional_behaviors_folder = "nao_additional_behaviors-2870f3"
     #IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
-    ip = "localhost"
-    port = 52745
-    virtual = True
-    additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
+    # ip = "localhost"
+    # port = 52745
+    # virtual = True
+    # additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
 
     nao_interface = NaoInterface(ip, port, virtual, additional_behaviors_folder)
     nao_interface.run()

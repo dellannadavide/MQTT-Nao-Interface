@@ -12,7 +12,7 @@ logger = logging.getLogger("mqtt-nao-interface.actuators.actuator")
 class Actuator(threading.Thread):
     def __init__(self, nao_interface, id, mqtt_topic, nao_services, qi_app=None, virtual=False):
         super(Actuator, self).__init__()
-        self.is_paused = False
+        self.is_paused = True
         self.nao_interface = nao_interface
         self.id = id
         self.app = qi_app
@@ -72,7 +72,7 @@ class Actuator(threading.Thread):
                 try:
                     directive_list = self.getDirective()
                     if len(directive_list) == 0:
-                        sleep(1)
+                        pass
                     else:
                         for p in directive_list:
                             self.actuate(p)

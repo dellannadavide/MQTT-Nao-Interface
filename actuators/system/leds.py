@@ -9,10 +9,18 @@ logger = logging.getLogger("mqtt-nao-interface.actuators.system.leds")
 class Leds(Actuator):
     def __init__(self, nao_interface, id, mqtt_topic, qi_app):
         super(Leds, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_LEDS], qi_app)
-        self.initial_color = Constants.COLORS_WHITE
+        self.initial_color = Constants.COLORS_RED
+        self.default_color = Constants.COLORS_WHITE
         self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
         self.current_color = self.initial_color
         self.thinking_color = Constants.COLORS_BLUE
+        self.setColorInner(self.initial_color)
+
+    def setSleeping(self, sleeping):
+        if sleeping:
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("FaceLeds", 0.0)
+        else:
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("FaceLeds", 1.0)
 
     def setThinking(self, thinking):
         if thinking:
@@ -23,13 +31,13 @@ class Leds(Actuator):
             self.nao_interface.is_thinking = True
         else:
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
-            self.current_color = self.initial_color
+            self.current_color = Constants.COLORS_WHITE
             self.nao_interface.is_thinking = False
 
     def setColorExternal(self, color):
         if color==self.thinking_color:
             self.setThinking(True)
-        elif color==self.initial_color:
+        elif color==self.default_color:
             self.setThinking(False)
         else:
             self.setColorInner(color)
@@ -50,6 +58,11 @@ class Leds(Actuator):
             self.current_color = color
         elif color == Constants.COLORS_RED:
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 0.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 0.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 1.0)
+            self.current_color = color
+        elif color == Constants.COLORS_YELLOW:
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 1.0)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 0.0)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 1.0)
             self.current_color = color
