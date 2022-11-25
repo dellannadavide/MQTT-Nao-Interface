@@ -28,7 +28,9 @@ class TextToSpeech(Actuator):
                 logger.debug("Setting is_speaking to True")
                 self.nao_interface.is_speaking = True
                 if self.nao_interface.is_listening:  # if I start saying something while audio is being captured, then I set to discard such a thing later
-                    self.nao_interface.discard_last_audio = True
+                    logger.debug("The mic was listening while I was speaking, so because I want to ignore what is said I trigger a stop.")
+                    self.nao_interface.services["SpeechRecognizer"].stopListening(erase_detected=True)
+                    # self.nao_interface.discard_last_audio = True
 
                 # sentence = "\RSPD=" + str(tts.getParameter("Speed (%)")) + "\ "
                 # sentence += "\VCT=" + str(tts.getParameter("Voice shaping (%)")) + "\ "

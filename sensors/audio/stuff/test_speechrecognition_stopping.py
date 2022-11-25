@@ -20,12 +20,12 @@ mic = sr.Microphone()
 with mic as source:
     r.adjust_for_ambient_noise(source)
 
-while True:
+while True: #sense function
     print(r.energy_threshold)
     is_listening = True
     timeout = time.time() + 10  # timeout in 10 seconds
     try:
-        stop_listening = r.listen_in_background(sr.Microphone(), callback, phrase_time_limit=5)
+        stop_listening = r.listen_in_background(sr.Microphone(1), callback, phrase_time_limit=5)
         while is_listening:
             if time.time() <= timeout:
                 time.sleep(0.1)

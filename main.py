@@ -50,7 +50,7 @@ class NaoInterface:
         self.simulation = False
         self.is_speaking = False
         self.is_listening = False
-        self.discard_last_audio = False
+        # self.discard_last_audio = False
         # self.send_audio_lock = threading.Lock()
         self.is_moving = False
         self.is_looking = False
@@ -162,7 +162,7 @@ class NaoInterface:
                 self.services = {
                     # SENSORS
                     "NaoImageCollector": naoImageCollector,
-                    "SpeechRecognizer": SpeechRecognizer(self, "SpeechRecognizer", Constants.TOPIC_SPEECH, 0.1, virtual=True),  # 0.1
+                    "SpeechRecognizer": SpeechRecognizer(self, "SpeechRecognizer", Constants.TOPIC_SPEECH, 0.01, virtual=True),  # 0.1
                     "HeadTracker": HeadTracker(self, "HeadTracker", Constants.TOPIC_HEAD_TRACKER, 0.1, self.app, virtual=True),
                     "EmotionDetector": EmotionDetector(self, "EmotionDetector", Constants.TOPIC_EMOTION_DETECTION, 1, self.app),
                     "ObjectDetector":ObjectDetector(self, "ObjectDetector", Constants.TOPIC_OBJECT_DETECTION, 1, virtual=True),
@@ -231,10 +231,10 @@ if __name__ == "__main__":
     # virtual = False
     # additional_behaviors_folder = "nao_additional_behaviors-2870f3"
     #IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
-    # ip = "localhost"
-    # port = 52745
-    # virtual = True
-    # additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
+    ip = "localhost"
+    port = 50316
+    virtual = True
+    additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
 
     nao_interface = NaoInterface(ip, port, virtual, additional_behaviors_folder)
     nao_interface.run()
