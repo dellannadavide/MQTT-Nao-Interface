@@ -101,7 +101,7 @@ class SpeechRecognizer(Sensor):
 
     def sense(self):
         # logger.debug("....beginning sensing")
-        if self.nao_interface.is_speaking:
+        if self.nao_interface.is_speaking or self.nao_interface.is_thinking:
             # logger.info("Nao is speaking, I'm not gonna listen")
             # time.sleep(0.5)
             return None

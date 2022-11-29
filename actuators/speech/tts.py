@@ -14,6 +14,7 @@ class TextToSpeech(Actuator):
         super(TextToSpeech, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_TTS], qi_app, virtual)
         self.services[Constants.NAO_SERVICE_TTS].setLanguage("English")
         self.default_volume = 0.7
+        self.default_speed = 100
         self.is_first_tts = True
 
         # if self.virtual:
@@ -35,21 +36,19 @@ class TextToSpeech(Actuator):
                 # sentence = "\RSPD=" + str(tts.getParameter("Speed (%)")) + "\ "
                 # sentence += "\VCT=" + str(tts.getParameter("Voice shaping (%)")) + "\ "
                 sentence = str(splitted_directive[1])
+                volume = None
                 if splitted_directive[2] == "volume":
                     volume = round(float(splitted_directive[3])/100.0,2)
-                    logger.info("-> setting volume to "+str(volume))
-                    self.services[Constants.NAO_SERVICE_TTS].setVolume(volume)
-                else:
-                    self.services[Constants.NAO_SERVICE_TTS].setVolume(self.default_volume)
-
-                if len(splitted_directive)>5 and splitted_directive[4] == "emotion":
-                    if splitted_directive[5] == "joy":
-                        sentence = "\\style=playful\\ "+sentence
-
+                speed = None
+                if splitted_directive[4] == "speed":
+                    speed = float(splitted_directive[5])
+                emotion = None
+                if len(splitted_directive)>7 and splitted_directive[6] == "emotion":
+                    emotion = splitted_directive[7]
 
                 # sentence += "\RST\ "
                 logger.info("-> "+str(sentence))
-                self.say(str(sentence))
+                self.say(str(sentence), emotion, speed, volume)
 
                 self.nao_interface.is_speaking = False
                 logger.debug("Setting is_speaking to False")
@@ -63,12 +62,24 @@ class TextToSpeech(Actuator):
                 self.nao_interface.is_speaking = False
                 pass
 
-    def say(self, sentence):
+    def say(self, sentence, emotion, speed, volume):
+        if not volume is None:
+            logger.info("-> setting volume to " + str(volume))
+            self.services[Constants.NAO_SERVICE_TTS].setVolume(volume)
+        else:
+            self.services[Constants.NAO_SERVICE_TTS].setVolume(self.default_volume)
 
         # print("is speaking")
         sub_sentences = sentence.split(".")
         # i = 0
         for ss in sub_sentences:
+            if (not emotion is None) and (emotion == "joy"):
+                ss = "\\style=playful\\ " + ss
+            if (not speed is None):
+                ss = "\\rspd="+str(speed)+"\\"+ss
+
+            logger.info("---> " + str(ss))
+
             id = self.services[Constants.NAO_SERVICE_TTS].pCall("say", str(ss))
             self.services[Constants.NAO_SERVICE_TTS].wait(id)
 

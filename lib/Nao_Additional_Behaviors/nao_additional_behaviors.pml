@@ -19,14 +19,16 @@
         <BehaviorDescription name="behavior" src="behaviors/look_bottom_left" xar="behavior.xar" />
         <BehaviorDescription name="behavior" src="behaviors/look_top_left" xar="behavior.xar" />
         <BehaviorDescription name="behavior" src="behaviors/look_top_right" xar="behavior.xar" />
-        <BehaviorDescription name="behavior" src="test" xar="behavior.xar" />
+        <BehaviorDescription name="behavior" src="behaviors/dance" xar="behavior.xar" />
+        <BehaviorDescription name="behavior" src="showcase" xar="behavior.xar" />
+        <BehaviorDescription name="behavior" src="vision_recognition" xar="behavior.xar" />
     </BehaviorDescriptions>
     <Dialogs />
     <Resources>
         <File name="elephant" src="behaviors/anim/elephant.ogg" />
-        <File name="swiftswords_ext" src="test/swiftswords_ext.mp3" />
-        <File name="taichimove" src="test/taichimove.pmt" />
-        <File name="mikhael-landscape-paisaje" src="test/sounds/mikhael-landscape-paisaje.ogg" />
+        <File name="swiftswords_ext" src="showcase/swiftswords_ext.mp3" />
+        <File name="taichimove" src="showcase/taichimove.pmt" />
+        <File name="mikhael-landscape-paisaje" src="showcase/sounds/mikhael-landscape-paisaje.ogg" />
     </Resources>
     <Topics />
     <IgnoredPaths />

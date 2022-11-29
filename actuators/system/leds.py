@@ -11,9 +11,10 @@ class Leds(Actuator):
         super(Leds, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_LEDS], qi_app)
         self.initial_color = Constants.COLORS_RED
         self.default_color = Constants.COLORS_WHITE
-        self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
+        # self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
         self.current_color = self.initial_color
         self.thinking_color = Constants.COLORS_BLUE
+
         self.setColorInner(self.initial_color)
 
     def setSleeping(self, sleeping):
@@ -23,16 +24,16 @@ class Leds(Actuator):
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("FaceLeds", 1.0)
 
     def setThinking(self, thinking):
+        # print("in setthinking", thinking)
+        self.nao_interface.is_thinking = thinking
         if thinking:
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 0.0)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 1.0)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 0.0)
             self.current_color = self.thinking_color
-            self.nao_interface.is_thinking = True
         else:
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
             self.current_color = Constants.COLORS_WHITE
-            self.nao_interface.is_thinking = False
 
     def setColorExternal(self, color):
         if color==self.thinking_color:

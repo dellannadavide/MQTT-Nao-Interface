@@ -57,11 +57,12 @@ class EmotionDetector(Sensor):
                 # emotions list you created above.
                 predicted_emotion = self.emotions[prob.argmax()].lower()
                 # Print the target Emotion
+                logger.info('Prob.: {}'.format(prob))
+                logger.info('Predicted: {}'.format(predicted_emotion))
                 if not predicted_emotion == "neutral":
-                    logger.info('Emotion is: {}'.format(predicted_emotion))
                     return predicted_emotion
                 else:
-
+                    # logger.info('Emotion is: {}'.format(predicted_emotion))
                     return None
             else:
                 return None

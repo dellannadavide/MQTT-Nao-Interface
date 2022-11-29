@@ -70,6 +70,167 @@
         </message>
     </context>
     <context>
+        <name>showcase/behavior.xar:/Animated Say</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+    </context>
+    <context>
+        <name>showcase/behavior.xar:/Say</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+        <message>
+            <source>Hello! I'm Nao! I'm a simple robot but I can do many things!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">Hello! I'm Nao! I'm a simple robot but I can do many things!</translation>
+        </message>
+        <message>
+            <source>Hey there! I'm Nao! I'm a simple robot, but I can do many things!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">Hey there! I'm Nao! I'm a simple robot, but I can do many things!</translation>
+        </message>
+        <message>
+            <source>Hello there! I'm Nao! I'm a simple robot, but I can do many things!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">Hello there! I'm Nao! I'm a simple robot, but I can do many things!</translation>
+        </message>
+        <message>
+            <source>Hello there! I'm the robot Nao! I'm a simple robot, but I can do many things!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">Hello there! I'm the robot Nao! I'm a simple robot, but I can do many things!</translation>
+        </message>
+        <message>
+            <location filename="showcase/behavior.xar" line="0"/>
+            <source>Hello there! My name is Nao! I'm a simple robot, but I can do many things!</source>
+            <comment>Text</comment>
+            <translation type="unfinished">Hello there! My name is Nao! I'm a simple robot, but I can do many things!</translation>
+        </message>
+    </context>
+    <context>
+        <name>showcase/behavior.xar:/Say (1)</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+        <message>
+            <source>I can speak and listen to your voice! But I can also see through my eyes! And I can move! Look at this!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">I can speak and listen to your voice! But I can also see through my eyes! And I can move! Look at this!</translation>
+        </message>
+        <message>
+            <location filename="showcase/behavior.xar" line="0"/>
+            <source>I can speak and listen to your voice! But I can also see through my eyes! </source>
+            <comment>Text</comment>
+            <translation type="unfinished">I can speak and listen to your voice! But I can also see through my eyes! </translation>
+        </message>
+    </context>
+    <context>
+        <name>showcase/behavior.xar:/Say (2)</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+        <message>
+            <source>I hope we can have a nice talk together! See you soon!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">I hope we can have a nice talk together! See you soon!</translation>
+        </message>
+        <message>
+            <location filename="showcase/behavior.xar" line="0"/>
+            <source>Well, I hope we can have a nice chat together! See you soon!</source>
+            <comment>Text</comment>
+            <translation type="unfinished">Well, I hope we can have a nice chat together! See you soon!</translation>
+        </message>
+    </context>
+    <context>
+        <name>showcase/behavior.xar:/Say (3)</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+        <message>
+            <source>Could you even do that? Pretty fancy, right? It took me years to learn it.</source>
+            <comment>Text</comment>
+            <translation type="obsolete">Could you even do that? Pretty fancy, right? It took me years to learn it.</translation>
+        </message>
+        <message>
+            <location filename="showcase/behavior.xar" line="0"/>
+            <source>Could you even do that? Pretty fancy, isn't it? It took me years to learn it.</source>
+            <comment>Text</comment>
+            <translation type="unfinished">Could you even do that? Pretty fancy, isn't it? It took me years to learn it.</translation>
+        </message>
+    </context>
+    <context>
+        <name>showcase/behavior.xar:/Say (4)</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+        <message>
+            <source>Finally, I can also  move! Look at this!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">Finally, I can also  move! Look at this!</translation>
+        </message>
+        <message>
+            <source>Hey, I could feel that! Finally, I can also  move! Look at this!</source>
+            <comment>Text</comment>
+            <translation type="obsolete">Hey, I could feel that! Finally, I can also  move! Look at this!</translation>
+        </message>
+        <message>
+            <location filename="showcase/behavior.xar" line="0"/>
+            <source>Hey! I could feel that! Finally, I can also  move! Look at this!</source>
+            <comment>Text</comment>
+            <translation type="unfinished">Hey! I could feel that! Finally, I can also  move! Look at this!</translation>
+        </message>
+    </context>
+    <context>
+        <name>showcase/behavior.xar:/Say (5)</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+        <message>
+            <source>I have many sensors! Try to touch the tip of my foot.</source>
+            <comment>Text</comment>
+            <translation type="obsolete">I have many sensors! Try to touch the tip of my foot.</translation>
+        </message>
+        <message>
+            <location filename="showcase/behavior.xar" line="0"/>
+            <source>I also have many sensors! Try to touch the tip of my foot.</source>
+            <comment>Text</comment>
+            <translation type="unfinished">I also have many sensors! Try to touch the tip of my foot.</translation>
+        </message>
+        <message>
+            <source>I also have many sensors! Try to touch my head, or the tip of my foot.</source>
+            <comment>Text</comment>
+            <translation type="obsolete">I also have many sensors! Try to touch my head, or the tip of my foot.</translation>
+        </message>
+    </context>
+    <context>
+        <name>showcase/behavior.xar:/Say (6)</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+        <message>
+            <location filename="../../../../../../../../../../../../../../../../../../../../../../../../../Program Files (x86)/Softbank Robotics/Choregraphe Suite 2.8/bin/translations/showcase/behavior.xar" line="0"/>
+            <source></source>
+            <comment>Text</comment>
+            <translation></translation>
+        </message>
+    </context>
+    <context>
         <name>test/behavior.xar:/Say</name>
         <message>
             <source>Hello</source>
