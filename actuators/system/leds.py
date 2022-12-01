@@ -11,7 +11,7 @@ class Leds(Actuator):
         super(Leds, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_LEDS], qi_app)
         self.initial_color = Constants.COLORS_RED
         self.default_color = Constants.COLORS_WHITE
-        # self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
+        self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
         self.current_color = self.initial_color
         self.thinking_color = Constants.COLORS_BLUE
 

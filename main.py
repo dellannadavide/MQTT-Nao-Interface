@@ -150,7 +150,7 @@ class NaoInterface:
                     "NaoImageCollector": naoImageCollector,
                     "SpeechRecognizer": SpeechRecognizer(self, "SpeechRecognizer", Constants.TOPIC_SPEECH, 0.01, micenergy=micEnDet),
                     "HumanDetector": HumanDetector(self, "HumanDetector", Constants.TOPIC_HUMAN_DETECTION, 3, self.app),
-                    "VisionRecognition": VisionRecognition(self, "VisionRecognition", Constants.TOPIC_OBJECT_DETECTION, 1, self.app),
+                    "VisionRecognition": VisionRecognition(self, "VisionRecognition", Constants.TOPIC_OBJECT_DETECTION, 0.5, self.app),
                     # human greeter (incl. human detection) (ONLY FOR REAL ROBOT)
                     # DistanceDetector(self, "DistanceDetector", Constants.TOPIC_DISTANCE, 5, app),
                     "HeadTracker": HeadTracker(self, "HeadTracker", Constants.TOPIC_HEAD_TRACKER, 1, self.app),
@@ -231,10 +231,10 @@ if __name__ == "__main__":
     # virtual = False
     # additional_behaviors_folder = "nao_additional_behaviors-2870f3"
     #IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
-    ip = "localhost"
-    port = 51236
-    virtual = True
-    additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
+    # ip = "localhost"
+    # port = 52272
+    # virtual = True
+    # additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
 
     nao_interface = NaoInterface(ip, port, virtual, additional_behaviors_folder)
     nao_interface.run()

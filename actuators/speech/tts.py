@@ -36,19 +36,26 @@ class TextToSpeech(Actuator):
                 # sentence = "\RSPD=" + str(tts.getParameter("Speed (%)")) + "\ "
                 # sentence += "\VCT=" + str(tts.getParameter("Voice shaping (%)")) + "\ "
                 sentence = str(splitted_directive[1])
+
+                """ Cleaning the sentence by replacing some stuff that cannot be said out loud """
+                sentence = sentence.replace(":D", "")
+
                 volume = None
                 if splitted_directive[2] == "volume":
                     volume = round(float(splitted_directive[3])/100.0,2)
                 speed = None
                 if splitted_directive[4] == "speed":
                     speed = float(splitted_directive[5])
+                shape = None
+                if splitted_directive[6] == "tone":
+                    shape = float(splitted_directive[7])
                 emotion = None
-                if len(splitted_directive)>7 and splitted_directive[6] == "emotion":
-                    emotion = splitted_directive[7]
+                if len(splitted_directive)>8 and splitted_directive[7] == "emotion":
+                    emotion = splitted_directive[8]
 
                 # sentence += "\RST\ "
                 logger.info("-> "+str(sentence))
-                self.say(str(sentence), emotion, speed, volume)
+                self.say(str(sentence), emotion, speed, shape, volume)
 
                 self.nao_interface.is_speaking = False
                 logger.debug("Setting is_speaking to False")
@@ -62,7 +69,7 @@ class TextToSpeech(Actuator):
                 self.nao_interface.is_speaking = False
                 pass
 
-    def say(self, sentence, emotion, speed, volume):
+    def say(self, sentence, emotion, speed, shape, volume):
         if not volume is None:
             logger.info("-> setting volume to " + str(volume))
             self.services[Constants.NAO_SERVICE_TTS].setVolume(volume)
@@ -76,7 +83,9 @@ class TextToSpeech(Actuator):
             if (not emotion is None) and (emotion == "joy"):
                 ss = "\\style=playful\\ " + ss
             if (not speed is None):
-                ss = "\\rspd="+str(speed)+"\\"+ss
+                ss = "\\rspd="+str(int(speed))+"\\"+ss
+            if (not shape is None):
+                ss = "\\vct="+str(int(shape))+"\\"+ss
 
             logger.info("---> " + str(ss))
 
