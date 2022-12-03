@@ -1,4 +1,3 @@
-import threading
 import traceback
 import os
 from datetime import datetime
@@ -106,11 +105,14 @@ class NaoInterface:
         time.sleep(2)
         restart_program()
 
-    def setSleeping(self, sleeping):
-        if sleeping:
+    def setSleeping(self, gotosleep):
+        if gotosleep:
+            while self.is_speaking: #in case now is saying a sentence, I wait for it to finish
+                time.sleep(0.1)
             self.is_sleeping = True
             self.services["Power"].sleep()
-            self.services["LedsActuator"].setSleeping(True)
+            if "LedsActuator" in self.services.keys():
+                self.services["LedsActuator"].setSleeping(True)
             logger.info("Setting Nao to Sleep (it can be woken up with keywork \"wake up\"). All services but the speech recognition are paused")
             for s in self.services.keys():
                 if not s=="SpeechRecognizer":
@@ -118,7 +120,8 @@ class NaoInterface:
         else:
             self.is_sleeping = False
             self.services["Power"].wake_up()
-            self.services["LedsActuator"].setSleeping(False)
+            if "LedsActuator" in self.services.keys():
+                self.services["LedsActuator"].setSleeping(False)
             logger.info("Waking up Nao. All services are unpaused")
             for s in self.services.keys():
                 self.services[s].unpause()
@@ -150,7 +153,7 @@ class NaoInterface:
                     "NaoImageCollector": naoImageCollector,
                     "SpeechRecognizer": SpeechRecognizer(self, "SpeechRecognizer", Constants.TOPIC_SPEECH, 0.01, micenergy=micEnDet),
                     "HumanDetector": HumanDetector(self, "HumanDetector", Constants.TOPIC_HUMAN_DETECTION, 3, self.app),
-                    "VisionRecognition": VisionRecognition(self, "VisionRecognition", Constants.TOPIC_OBJECT_DETECTION, 0.5, self.app),
+                    # "VisionRecognition": VisionRecognition(self, "VisionRecognition", Constants.TOPIC_OBJECT_DETECTION, 1.5, self.app),
                     # human greeter (incl. human detection) (ONLY FOR REAL ROBOT)
                     # DistanceDetector(self, "DistanceDetector", Constants.TOPIC_DISTANCE, 5, app),
                     "HeadTracker": HeadTracker(self, "HeadTracker", Constants.TOPIC_HEAD_TRACKER, 1, self.app),
@@ -166,9 +169,11 @@ class NaoInterface:
                     "HeadTracker": HeadTracker(self, "HeadTracker", Constants.TOPIC_HEAD_TRACKER, 0.1, self.app, virtual=True),
                     "EmotionDetector": EmotionDetector(self, "EmotionDetector", Constants.TOPIC_EMOTION_DETECTION, 2, self.app),
                     "ObjectDetector":ObjectDetector(self, "ObjectDetector", Constants.TOPIC_OBJECT_DETECTION, 1, virtual=True),
+                    # "ObjectDetectorHAT":ObjectDetectorHAT(self, "ObjectDetectorHAT", Constants.TOPIC_OBJECT_DETECTION, 1, virtual=True),
                     # DistanceDetector(self, "DistanceDetector", Constants.TOPIC_DISTANCE, 1, app, virtual=True), #0.2
                     # ACTUATORS
                     "TextToSpeech": TextToSpeech(self, "TextToSpeech", Constants.TOPIC_DIRECTIVE_TTS, self.app, virtual=True),
+                    "Power": Power(self, "Power", Constants.TOPIC_DIRECTIVE_SYSTEM, self.app, virtual=True),
                     "PostureActuator": PostureActuator(self, "PostureActuator", Constants.TOPIC_POSTURE, self.app), #doesn't require the virtual to be true?
                     # "MotionActuator": MotionActuator(self, "MotionActuator", Constants.TOPIC_MOTION, self.app, virtual=True)
                     # BehaviorActuator(self, "BehaviorActuator", Constants.TOPIC_BEHAVIOR, app, virtual=True)
@@ -195,8 +200,9 @@ class NaoInterface:
 if __name__ == "__main__":
     now = datetime.now()
     exec_timestamp = str(now.strftime("%Y%m%d%H%M%S"))
+    exp_id = "99999"
     log_folder = "./log/"
-    log_path_name = log_folder + "mqtt_nao_interface_" + exec_timestamp + ".log"
+    log_path_name = log_folder + exp_id+"_mqtt_nao_interface_" + exec_timestamp + ".log"
 
     # logging.basicConfig(level=logging.INFO,
     #                     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -231,10 +237,10 @@ if __name__ == "__main__":
     # virtual = False
     # additional_behaviors_folder = "nao_additional_behaviors-2870f3"
     #IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
-    # ip = "localhost"
-    # port = 52272
-    # virtual = True
-    # additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
+    ip = "localhost"
+    port = 64182
+    virtual = True
+    additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
 
     nao_interface = NaoInterface(ip, port, virtual, additional_behaviors_folder)
     nao_interface.run()

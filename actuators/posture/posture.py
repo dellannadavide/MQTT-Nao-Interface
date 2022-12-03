@@ -12,7 +12,10 @@ class PostureActuator(Actuator):
         super(PostureActuator, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_POSTURE, Constants.NAO_SERVICE_ANIMATION_PLAYER], qi_app, virtual)
         self.speed = 0.8
 
-    def actuate(self, directive):
+    def actuate(self, directive_list):
+        directive = directive_list[-1] # note: if there is more than one in the list, instead of executing all of them, in the case of posture, I only execute the most recent, because they take a while, so it does not make sense to coumulate them
+        #
+        # for directive in directive_list:
         splitted_directive = directive.split(Constants.STRING_SEPARATOR)
         logger.info(splitted_directive)
         logger.info(splitted_directive[0] == Constants.DIRECTIVE_GOTOPOSTURE)

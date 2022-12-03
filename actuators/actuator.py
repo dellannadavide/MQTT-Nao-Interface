@@ -74,8 +74,7 @@ class Actuator(threading.Thread):
                     if len(directive_list) == 0:
                         pass
                     else:
-                        for p in directive_list:
-                            self.actuate(p)
+                        self.actuate(directive_list)
                 except RuntimeError:
                     logger.error(traceback.format_exc())
                     logger.error("Runtime or Key Error. Waiting 5 seconds and then rebooting...")
@@ -85,6 +84,6 @@ class Actuator(threading.Thread):
                     # self.connectServices()
 
     @abstractmethod
-    def actuate(self, directive):
+    def actuate(self, directive_list):
         pass
 

@@ -59,11 +59,12 @@ class EmotionDetector(Sensor):
                 # Print the target Emotion
                 logger.info('Prob.: {}'.format(prob))
                 logger.info('Predicted: {}'.format(predicted_emotion))
-                if not predicted_emotion == "neutral":
-                    return predicted_emotion
-                else:
-                    # logger.info('Emotion is: {}'.format(predicted_emotion))
-                    return None
+                return predicted_emotion
+                # if not predicted_emotion == "neutral":
+                #     return predicted_emotion
+                # else:
+                #     # logger.info('Emotion is: {}'.format(predicted_emotion))
+                #     return None
             else:
                 return None
         else:

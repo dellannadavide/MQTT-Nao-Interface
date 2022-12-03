@@ -44,28 +44,31 @@ class Leds(Actuator):
             self.setColorInner(color)
 
     def setColorInner(self, color):
+        max_intensity = 1.0
+        if self.nao_interface.is_sleeping:
+            max_intensity = 0.5
         if color == Constants.COLORS_WHITE:
-            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", 1.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLeds", max_intensity)
             self.current_color = color
         elif color == Constants.COLORS_BLUE:
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 0.0)
-            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 1.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", max_intensity)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 0.0)
             self.current_color = color
         elif color == Constants.COLORS_GREEN:
-            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 1.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", max_intensity)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 0.0)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 0.0)
             self.current_color = color
         elif color == Constants.COLORS_RED:
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 0.0)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 0.0)
-            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 1.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", max_intensity)
             self.current_color = color
         elif color == Constants.COLORS_YELLOW:
-            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 1.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", max_intensity)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 0.0)
-            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", 1.0)
+            self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsRed", max_intensity)
             self.current_color = color
         else:
             logger.warning("Color " + str(color) +" unknown.")
@@ -80,28 +83,29 @@ class Leds(Actuator):
         except RuntimeError:
             self.handleRUntimeException()
 
-    def actuate(self, directive):
-        logger.debug("Actuatinig directive {}".format(directive))
-        splitted_directive = directive.split(Constants.STRING_SEPARATOR)
-        try:
-            if splitted_directive[0] == Constants.DIRECTIVE_LED_CHANGE_COLOR:
-                if self.current_color=="white":
-                    self.setColor("blue",external_command=True)
-                    # self.thinking_color = True
-                else:
-                    #important here to set first the thinking false
-                    # self.thinking_color = False
-                    self.setColor("white", external_command=True)
-            if splitted_directive[0] == Constants.DIRECTIVE_LED_SET_COLOR:
-                new_col = splitted_directive[1]
-                self.setColor(new_col, external_command=True)
+    def actuate(self, directive_list):
+        for directive in directive_list:
+            logger.debug("Actuatinig directive {}".format(directive))
+            splitted_directive = directive.split(Constants.STRING_SEPARATOR)
+            try:
+                if splitted_directive[0] == Constants.DIRECTIVE_LED_CHANGE_COLOR:
+                    if self.current_color=="white":
+                        self.setColor("blue",external_command=True)
+                        # self.thinking_color = True
+                    else:
+                        #important here to set first the thinking false
+                        # self.thinking_color = False
+                        self.setColor("white", external_command=True)
+                if splitted_directive[0] == Constants.DIRECTIVE_LED_SET_COLOR:
+                    new_col = splitted_directive[1]
+                    self.setColor(new_col, external_command=True)
 
-            if splitted_directive[0] == Constants.DIRECTIVE_LED_SET_THINKING:
-                thinking = (splitted_directive[1] == "True")
-                logger.debug("setting thinking to {}".format(thinking))
-                self.setThinking(thinking)
+                if splitted_directive[0] == Constants.DIRECTIVE_LED_SET_THINKING:
+                    thinking = (splitted_directive[1] == "True")
+                    logger.debug("setting thinking to {}".format(thinking))
+                    self.setThinking(thinking)
 
-        except Exception:
-            logger.warning(traceback.format_exc())
-            logger.warning("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot use leds")
-            pass
+            except Exception:
+                logger.warning(traceback.format_exc())
+                logger.warning("Could not perform directive "+str(splitted_directive)+". If connected to virtual robot: cannot use leds")
+                pass

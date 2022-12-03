@@ -19,7 +19,7 @@ class SpeechRecognizer(Sensor):
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None, micenergy=None, virtual=False):
         super(SpeechRecognizer, self).__init__(nao_interface, id, mqtt_topic, [], freq, qi_app, virtual)
 
-        self.timeout = 10
+        self.timeout = 7
         self.phrase_time_limit = 5
         self.micenergy = micenergy
 
@@ -38,8 +38,8 @@ class SpeechRecognizer(Sensor):
 
 
         self.r = sr.Recognizer()
-        self.r.pause_threshold = 0.2
-        self.r.non_speaking_duration = 0.1
+        self.r.pause_threshold = 0.1
+        self.r.non_speaking_duration = 0.05
         self.stop_listening = None
 
         mic = sr.Microphone(self.mic_device)

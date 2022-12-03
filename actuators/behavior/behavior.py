@@ -20,10 +20,11 @@ class BehaviorActuator(Actuator):
 
         self.getBehaviors()
 
-    def actuate(self, directive):
-        splitted_directive = directive.split(Constants.STRING_SEPARATOR)
-        logger.info("actuate")
-        self.services[Constants.NAO_SERVICE_MEMORY].raiseEvent(Constants.NAO_EVENT_TRIGGER_LEARN_FACE, "Davide")
+    def actuate(self, directive_list):
+        for directive in directive_list:
+            splitted_directive = directive.split(Constants.STRING_SEPARATOR)
+            logger.info("actuate")
+            self.services[Constants.NAO_SERVICE_MEMORY].raiseEvent(Constants.NAO_EVENT_TRIGGER_LEARN_FACE, "Davide")
 
     def on_event(self, value):
         logger.info("on event")
