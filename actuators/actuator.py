@@ -39,7 +39,7 @@ class Actuator(threading.Thread):
                     logger.warning("Cannot find service "+str(s))
 
     def on_message(self, client, userdata, message):
-        rec_m = str(message.payload.decode("utf-8"))
+        rec_m = str(message.payload.decode("utf-8", errors="ignore"))
         logger.info("{} received message: {}".format(self.__class__.__name__, rec_m))
         self.received_directives.insert(0, rec_m)
 

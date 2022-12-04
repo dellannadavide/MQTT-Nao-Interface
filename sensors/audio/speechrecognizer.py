@@ -158,6 +158,11 @@ class SpeechRecognizer(Sensor):
             # audio = self.r.listen(source)
         # print(source_direction)
         # if source_direction=="Front":
+
+        # to_say = raw_input("Enter what to say:")
+        # return joinStrings([to_say, "50"],
+        #                      Constants.STRING_SEPARATOR_INNER)
+
         if not self.last_detected_speech is None:
             if not self.virtual:
                 self.nao_interface.services["LedsActuator"].setColor(Constants.COLORS_YELLOW)
