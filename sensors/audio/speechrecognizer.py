@@ -2,6 +2,7 @@ import audioop
 import random
 import time
 import traceback
+from datetime import datetime
 
 import numpy as np
 import pyaudio
@@ -104,7 +105,13 @@ class SpeechRecognizer(Sensor):
         if self.nao_interface.is_speaking or self.nao_interface.is_thinking:
             # logger.info("Nao is speaking, I'm not gonna listen")
             # time.sleep(0.5)
-            return None
+            if self.nao_interface.is_thinking:
+                if float(time.time()) - float(self.nao_interface.last_thinking_time) < 60:
+                    return None
+                else:
+                    pass
+            else:
+                return None
 
             # with self.mic as source:
             #     # if not self.micenergy is None:

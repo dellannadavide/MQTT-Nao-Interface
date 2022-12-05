@@ -112,7 +112,7 @@ class ObjectDetector(Sensor):
             "hat" : {
                 "yolo_model": cv2.dnn.readNetFromDarknet(self.data_folder + 'yolov3-hat.cfg',
                                                      self.data_folder + 'yolov3-hat_2400.weights'),
-                "min_confidence": 0.2,
+                "min_confidence": 0.5,
                 "class_labels": ["captain_hat"]
             }
         }

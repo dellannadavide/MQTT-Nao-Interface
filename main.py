@@ -54,6 +54,7 @@ class NaoInterface:
         self.is_moving = False
         self.is_looking = False
         self.is_thinking = False
+        self.last_thinking_time = -1
         self.is_sleeping = False
         # self.is_starting = True
         self.services = {}
@@ -156,7 +157,7 @@ class NaoInterface:
                     # "VisionRecognition": VisionRecognition(self, "VisionRecognition", Constants.TOPIC_OBJECT_DETECTION, 1.5, self.app),
                     # human greeter (incl. human detection) (ONLY FOR REAL ROBOT)
                     # DistanceDetector(self, "DistanceDetector", Constants.TOPIC_DISTANCE, 5, app),
-                    "HeadTracker": HeadTracker(self, "HeadTracker", Constants.TOPIC_HEAD_TRACKER, 1, self.app),
+                    "HeadTracker": HeadTracker(self, "HeadTracker", Constants.TOPIC_HEAD_TRACKER, 0.5, self.app),
                     "EmotionDetector": EmotionDetector(self, "EmotionDetector", Constants.TOPIC_EMOTION_DETECTION, 2, self.app),
                     "ObjectDetector":ObjectDetector(self, "ObjectDetector", Constants.TOPIC_OBJECT_DETECTION, 3, self.app),
                 }
@@ -200,9 +201,14 @@ class NaoInterface:
 if __name__ == "__main__":
     now = datetime.now()
     exec_timestamp = str(now.strftime("%Y%m%d%H%M%S"))
-    exp_id = "99999"
+    exp_id = "gx4vs"
+    # exp_id = "dda"
+    agent_type = "parrot_agent"
+    agent_type = "baseline_agent"
+    # agent_type = "sonar_agent"
+
     log_folder = "./log/"
-    log_path_name = log_folder + exp_id+"_mqtt_nao_interface_" + exec_timestamp + ".log"
+    log_path_name = log_folder + exp_id+"_mqtt_nao_interface_" + agent_type + "_" + exec_timestamp + ".log"
 
     # logging.basicConfig(level=logging.INFO,
     #                     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -237,10 +243,10 @@ if __name__ == "__main__":
     # virtual = False
     # additional_behaviors_folder = "nao_additional_behaviors-2870f3"
     #IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
-    ip = "localhost"
-    port = 64182
-    virtual = True
-    additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
+    # ip = "localhost"
+    # port = 64182
+    # virtual = True
+    # additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
 
     nao_interface = NaoInterface(ip, port, virtual, additional_behaviors_folder)
     nao_interface.run()

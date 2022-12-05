@@ -1,3 +1,4 @@
+import time
 import traceback
 
 import utils.constants as Constants
@@ -26,6 +27,7 @@ class Leds(Actuator):
     def setThinking(self, thinking):
         # print("in setthinking", thinking)
         self.nao_interface.is_thinking = thinking
+        self.nao_interface.last_thinking_time = time.time()
         if thinking:
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsGreen", 0.0)
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("ChestLedsBlue", 1.0)
