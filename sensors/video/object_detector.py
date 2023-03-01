@@ -31,23 +31,11 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.video.object_detector")
 
 class ObjectDetector(Sensor):
-    """
-    A simple class to compute data about face position
-    """
+    """ Object Detector Sensor. It takes data coming from the cameras and detects objects
+    (commented lines below can help if desired to visualize the boxes around objects detected) """
 
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None, virtual=False):
         super(ObjectDetector, self).__init__(nao_interface, id, mqtt_topic, [], freq, qi_app, virtual)
-
-        # if self.virtual:
-        #     """ In case of virtual robot, it is assumed it can be used the camera of the laptop """
-        #     self._cameraID = 0
-        #     self.capture = cv2.VideoCapture(self._cameraID)
-        # else:
-        #     self.resolution = vision_definitions.kQVGA#.k960p#.kQVGA  # 320 * 240
-        #     self.colorSpace = vision_definitions.kRGBColorSpace
-        #
-        #     self.fps = 5
-        #     self._imgClient = self.subscribe(Constants.NAO_SERVICE_VIDEO, "ObjectDetector", self.resolution, self.colorSpace, self.fps)
 
         self.lastImage = None
 

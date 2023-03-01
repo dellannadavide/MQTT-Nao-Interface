@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.actuators.system.leds")
 
 class Leds(Actuator):
+    """ Leds actuator. Processes (internal and external) direcctives that change the color of Nao's leds """
     def __init__(self, nao_interface, id, mqtt_topic, qi_app):
         super(Leds, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_LEDS], qi_app)
         self.initial_color = Constants.COLORS_RED
@@ -25,6 +26,11 @@ class Leds(Actuator):
             self.services[Constants.NAO_SERVICE_LEDS].setIntensity("FaceLeds", 1.0)
 
     def setThinking(self, thinking):
+        """
+        When thinking is true, the chest is blue
+        :param thinking:
+        :return:
+        """
         # print("in setthinking", thinking)
         self.nao_interface.is_thinking = thinking
         self.nao_interface.last_thinking_time = time.time()

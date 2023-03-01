@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.actuators.posture.posture")
 
 class PostureActuator(Actuator):
+    """ An actuator of postures stored in Nao's memory"""
     def __init__(self, nao_interface, id, mqtt_topic, qi_app, virtual=False):
         super(PostureActuator, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_POSTURE, Constants.NAO_SERVICE_ANIMATION_PLAYER], qi_app, virtual)
         self.speed = 0.8

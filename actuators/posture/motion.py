@@ -9,6 +9,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.actuators.posture.motion")
 
 class MotionActuator(Actuator):
+    """ An actuator of motions (e.g., head movements)"""
     def __init__(self, nao_interface, id, mqtt_topic, qi_app, virtual=False):
         super(MotionActuator, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_MOTION], qi_app, virtual)
         self.speed = 0.3

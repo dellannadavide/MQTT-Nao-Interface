@@ -8,6 +8,8 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.actuators.behavior.behavior")
 
 class BehaviorActuator(Actuator):
+    """ An actuator of behaviors stored in Nao's memory"""
+
     def __init__(self, nao_interface, id, mqtt_topic, qi_app, virtual=False):
         super(BehaviorActuator, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_MEMORY,
                                                                 Constants.NAO_SERVICE_BEHAVIOR_MANAGER],

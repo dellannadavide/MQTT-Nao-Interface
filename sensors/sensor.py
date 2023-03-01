@@ -9,7 +9,22 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.sensor")
 
 class Sensor(threading.Thread):
+    """
+        This class is used as a parent of subclasses representing sensors of the robot (e.g., microphone).
+        It extends threads so that every sensor can run in parallel.
+        It instantiates, at creation, a class of mqtt client where sensors publish collected and processed data
+    """
     def __init__(self, nao_interface, id, mqtt_topic, nao_services, freq, qi_app=None, virtual=False):
+        """
+        Init function
+        :param nao_interface: a pointer to the NaoInterface class
+        :param id: an id (string) for the actuator
+        :param mqtt_topic: a mqtt topic (string). the sensor will publish messages on that topic to communicate data
+        :param nao_services: the list of Nao services to which the sensor needs to subscribe to collect data
+        :param freq: the frequency at which the sensor detects data
+        :param qi_app: a pointer to the naoqi app
+        :param virtual: a boolean indicating whether the interface is running with virtual (true) or real (false) robot
+        """
         super(Sensor, self).__init__()
         self.is_paused = True
         self.nao_interface = nao_interface
@@ -30,6 +45,7 @@ class Sensor(threading.Thread):
         self.mqtt_client.startLoop()
 
     def connectServices(self):
+        """ Connects to all indicated services"""
         if not self.app is None:
             self.session = self.app.session
             self.services = {}
@@ -40,6 +56,13 @@ class Sensor(threading.Thread):
                     logger.warning("Cannot find service " + str(s))
 
     def subscribe(self, name_service, name_subscriber, *args):
+        """
+        Subscribes to one nao service
+        :param name_service: name of the service
+        :param name_subscriber: id of the subscriber
+        :param args: arguments for the service
+        :return: a reference to the service, or None
+        """
         try:
             subs = self.services[name_service].getSubscribers()
             for s in subs:
@@ -58,6 +81,10 @@ class Sensor(threading.Thread):
 
 
     def handleRUntimeException(self):
+        """
+        Propagates upwards a runtime exception
+        :return:
+        """
         self.nao_interface.handleRuntimeExceptions()
 
     def prepareToEnd(self):
@@ -69,12 +96,21 @@ class Sensor(threading.Thread):
                 self.services[service].unsubscribe(subscriber)
 
     def pause(self):
+        """ Pauses the sensor """
         self.is_paused = True
 
     def unpause(self):
+        """ Unpauses the sensor """
         self.is_paused = False
 
     def run(self):
+        """
+        As long as the sensor is not paused, this function is continuously executed at intervals of self.freq seconds
+        At every execution, it executes function self.sense() to collect data, and publishes collected data to the
+        mqtt topic.
+        self.sense() is sensor-specific, i.e., the method is abstract and implemented by the specific sensors
+        :return:
+        """
         while True:
             if not self.is_paused:
                 data_to_publish = None
@@ -85,9 +121,6 @@ class Sensor(threading.Thread):
                     logger.error("Runtime or Key Error. Waiting 5 seconds and then rebooting...")
                     time.sleep(5)
                     self.handleRUntimeException()
-                    # self.app = self.nao_interface.startQIAPP()
-                    # self.connectServices()
-                    # self.subscribeToServices()
                 except:
                     logger.warning(traceback.format_exc())
                     pass

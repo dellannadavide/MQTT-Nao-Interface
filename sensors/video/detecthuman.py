@@ -2,30 +2,17 @@
 # -*- encoding: UTF-8 -*-
 
 """Example: A Simple class to get & read FaceDetected Events"""
-from datetime import datetime
 
-import qi
-import time
-import sys
-import argparse
-
-
-import paho.mqtt.client as mqtt
-from random import randrange, uniform
-import time
+import logging
 
 import utils.constants as Constants
 import utils.util
 from sensors.sensor import Sensor
-from utils.mqttclient import MQTTClient
 
-import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.video.detecthuman")
 
 class HumanDetector(Sensor):
-    """
-    A simple class to react to face detection events.
-    """
+    """ Uses the internal nao face detection to detect humans """
 
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None):
         super(HumanDetector, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_MEMORY,

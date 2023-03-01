@@ -23,9 +23,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.video.detectobject")
 
 class VisionRecognition(Sensor):
-    """
-    A simple class to react to object detection events.
-    """
+    """ Uses the internal nao vision recognition to detect known objects (not used) """
 
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None):
         super(VisionRecognition, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_MEMORY,

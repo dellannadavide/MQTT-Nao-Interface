@@ -11,9 +11,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.video.emotion_detector")
 
 class EmotionDetector(Sensor):
-    """
-        A simple class to compute data about face emotion
-        """
+    """ detects emotions of humans in frames retrieved from camera """
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None, virtual=False):
         super(EmotionDetector, self).__init__(nao_interface, id, mqtt_topic, [], freq, qi_app, virtual)
         # Set model path

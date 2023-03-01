@@ -30,9 +30,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.video.headtracker")
 
 class HeadTracker(Sensor):
-    """
-    A simple class to compute data about face position
-    """
+    """ Tracks the head position and direction of people in front of Nao """
 
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None, virtual=False):
         super(HeadTracker, self).__init__(nao_interface, id, mqtt_topic, [], freq, qi_app, virtual)

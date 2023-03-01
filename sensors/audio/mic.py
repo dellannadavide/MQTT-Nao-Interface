@@ -13,6 +13,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.audio.mic")
 
 class MicEnergyDetector(Sensor):
+    """ Microphones Sensor. It handles data coming from micropohones of Nao """
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None):
         super(MicEnergyDetector, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_AUDIO], freq, qi_app)
         self.detected_front = []

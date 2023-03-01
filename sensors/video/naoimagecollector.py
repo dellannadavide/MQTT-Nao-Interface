@@ -9,9 +9,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.sensors.video.naoimagecollector")
 
 class NaoImageCollector(Sensor):
-    """
-    A simple class to compute data about face position
-    """
+    """ Collects frames from Camera """
 
     def __init__(self, nao_interface, id, mqtt_topic, freq, qi_app=None, virtual=False):
         super(NaoImageCollector, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_VIDEO], freq, qi_app, virtual)

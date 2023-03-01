@@ -29,7 +29,7 @@ Software download page: https://www.aldebaran.com/fr/support/nao-6/downloads-sof
 ## 2. Basic services required to run MQTT-Nao-Interface
 
 ### 2.1. MQTT message broker
-Communication between the (Python 2.7) MQTT-Nao-Interface and other external services (e.g., NOSAR) happens via [MQTT](https://en.wikipedia.org/wiki/MQTT) (a lightweight method of carrying out messaging using a publish/subscribe model, and the standard messaging protocol for the Internet of Things). 
+Communication between the (Python 2.7) MQTT-Nao-Interface and other external services (e.g., [SONAR](https://github.com/dellannadavide/SONAR)) happens via [MQTT](https://en.wikipedia.org/wiki/MQTT) (a lightweight method of carrying out messaging using a publish/subscribe model, and the standard messaging protocol for the Internet of Things). 
 
 Below, it is reported a very quick tutorial on how to install [Eclipse Mosquitto](https://mosquitto.org/), an open source message broker that implements the MQTT protocol, on an Ubuntu distro installed on Windows WSL.
 
@@ -72,7 +72,7 @@ You can find the file [here (240 MB)](https://github.com/BlcaKHat/yolov3-Helmet-
 
 ### 3.2. Setup and Run
 #### 3.2.1. Upload additional behaviors on Nao
-NOSAR can instruct the MQTT-Nao-Interface to execute a number of non-default behaviors on Nao (e.g., some particular movements).
+[SONAR](https://github.com/dellannadavide/SONAR) can instruct the MQTT-Nao-Interface to execute a number of non-default behaviors on Nao (e.g., some particular movements).
 These behaviors can be found in folder ```MQTT-Nao-Interface/lib/Nao_Additional_Behaviors```, which contains a Choreographe project.
 In order to upload them on Nao and/or on a virtual robot follow the next steps.
 >1. Open Choreographe

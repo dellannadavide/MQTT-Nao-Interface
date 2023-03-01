@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger("mqtt-nao-interface.actuators.system.power")
 
 class Power(Actuator):
+    """ Power actuator. Processes direcctives to set the robot to sleep or not. """
     def __init__(self, nao_interface,  id, mqtt_topic, qi_app, virtual=False):
         super(Power, self).__init__(nao_interface, id, mqtt_topic, [Constants.NAO_SERVICE_SYSTEM, Constants.NAO_SERVICE_AUTONOMOUS_LIFE], qi_app, virtual)
         self.wake_up()

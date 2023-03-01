@@ -1,26 +1,25 @@
-import traceback
+import argparse
+import logging
 import os
+import sys
+import time
+import traceback
 from datetime import datetime
 
-import logging
 import qi
-import time
-import sys
-import argparse
+
 import utils.constants as Constants
 from actuators.posture.posture import PostureActuator
 from actuators.speech.tts import TextToSpeech
 from actuators.system.leds import Leds
 from actuators.system.power import Power
 from sensors.audio.mic import MicEnergyDetector
+from sensors.audio.speechrecognizer import SpeechRecognizer
 from sensors.video.detecthuman import HumanDetector
-from sensors.video.detectobject import VisionRecognition
 from sensors.video.emotion_detector import EmotionDetector
 from sensors.video.headtracker import HeadTracker
 from sensors.video.naoimagecollector import NaoImageCollector
 from sensors.video.object_detector import ObjectDetector
-
-from sensors.audio.speechrecognizer import SpeechRecognizer
 
 
 def restart_program():
@@ -41,32 +40,28 @@ def restart_program():
 
 
 class NaoInterface:
+    """ The main class of the MQTT-Nao-Interface"""
     def __init__(self, ip, port, virtual, additional_behaviors_folder):
         self.ip = ip
         self.port = port
         self.virtual = virtual
         self.additional_behaviors_folder = additional_behaviors_folder
+        self.services = {}
+        self.app = None
+
+        """ Some variables desribing the entire system, used to synchronize the different services """
         self.simulation = False
         self.is_speaking = False
         self.is_listening = False
-        # self.discard_last_audio = False
-        # self.send_audio_lock = threading.Lock()
         self.is_moving = False
         self.is_looking = False
         self.is_thinking = False
         self.last_thinking_time = -1
         self.is_sleeping = False
-        # self.is_starting = True
-        self.services = {}
-        self.app = None
+
 
     def startQIAPP(self):
-        # if not self.app is None:
-        #     # print("stopping")
-        #     # qi._stopApplication()
-        #     # qi._app = None
-        #     # time.sleep(2)
-        #     self.app = None
+        """ Starts the NaoQi application to interface with Nao """
 
         parser = argparse.ArgumentParser()
         parser.add_argument("--ip", type=str, default=self.ip,
@@ -98,6 +93,7 @@ class NaoInterface:
 
 
     def handleRuntimeExceptions(self):
+        """ restarts the interface when runtime exceptions are thrown """
         logger.info("Closing application")
         self.app.stop()
         logger.info("Asking to every service to prepare to close")
@@ -107,8 +103,10 @@ class NaoInterface:
         restart_program()
 
     def setSleeping(self, gotosleep):
+        """ Sets all services to sleep, apart from the speech recognizer.
+        The speech recognizer remains on, listening to 'wake up' sentence for waking up. """
         if gotosleep:
-            while self.is_speaking: #in case now is saying a sentence, I wait for it to finish
+            while self.is_speaking:  # in case Nao is saying a sentence, I wait for it to finish
                 time.sleep(0.1)
             self.is_sleeping = True
             self.services["Power"].sleep()
@@ -129,11 +127,13 @@ class NaoInterface:
 
 
     def run(self):
+        """ Runs the interface. Starts the NaoQi app and then starts all services"""
         self.app = self.startQIAPP()
         if not self.app is None:
             """ 
             Here can decide which services to start (comment or uncomment)
-            IMPORTANT: some of the following only work with the real robot
+            IMPORTANT: some of the following only work with the real robot (the case "not self.virtual")
+            It is possible to change the frequency of sensing of the sensors from here
             """
 
             Constants.ADDITIONAL_BEHAVIORS_FOLDER = self.additional_behaviors_folder
@@ -181,16 +181,11 @@ class NaoInterface:
                 }
 
             """ Based on the services selected above, run in parallel their corresponding run functions"""
-            run_functions = []
             for s in self.services.keys():
                 self.services[s].start()
-                # run_functions.append(s.run)
 
-            # self.is_starting = False
             for s in self.services.keys():
                 self.services[s].unpause()
-            # runInParallel2(*run_functions)
-            # print("WARNING you disabled speechrecognizer in the virtual robot")
         else:
             logger.warning("Could not start the qi App. Waiting 5 seconds and then trying to reconnect...")
             time.sleep(5)
@@ -201,8 +196,10 @@ class NaoInterface:
 if __name__ == "__main__":
     now = datetime.now()
     exec_timestamp = str(now.strftime("%Y%m%d%H%M%S"))
+    """ An id to give to the execution (e.g., used to identify the logs of participants) """
     # exp_id = "jeec1"
     exp_id = "dda"
+    """ The type of agent being executed (N.B., only to reflect the SONAR counterpart in the name of the log) """
     agent_type = "parrot_agent"
     # agent_type = "baseline_agent"
     agent_type = "sonar_agent"
@@ -210,16 +207,7 @@ if __name__ == "__main__":
     log_folder = "./log/"
     log_path_name = log_folder + exp_id+"_mqtt_nao_interface_" + agent_type + "_" + exec_timestamp + ".log"
 
-    # logging.basicConfig(level=logging.INFO,
-    #                     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-    #                     handlers=[
-    #                         logging.FileHandler(log_path_name, mode="a+"),
-    #                         logging.StreamHandler(sys.stdout)
-    #                     ])
-
-
     logging.getLogger().setLevel(logging.DEBUG)
-
     logFormatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
     fileHandler = logging.FileHandler(log_path_name, mode="a+")
@@ -232,22 +220,26 @@ if __name__ == "__main__":
 
     logger = logging.getLogger("mqtt-nao-interface")
 
-    #IF RUNNING NAO ON A DIFFERENT ADDRESS
+    """ Comment/uncomment one of the following three blocks, and modify the parameters, based on the context """
+    # IF RUNNING NAO ON A DIFFERENT ADDRESS
     ip = "172.19.67.246"
     port = 9559
     virtual = False
     additional_behaviors_folder = "nao_additional_behaviors-2870f3"
-    #IF RUNNING NAO ON SAME LOCAL ADDRESS
+
+    # IF RUNNING NAO ON SAME LOCAL ADDRESS
     # ip = "nao.local"
     # port = 9559
     # virtual = False
     # additional_behaviors_folder = "nao_additional_behaviors-2870f3"
-    #IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
+
+    # IF RUNNING THE VIRTUAL ROBOT ON CHOREOGRAPH
     ip = "localhost"
     port = 50148
     virtual = True
     additional_behaviors_folder = ".lastUploadedChoregrapheBehavior"
 
+    """ Runs the interface """
     nao_interface = NaoInterface(ip, port, virtual, additional_behaviors_folder)
     nao_interface.run()
 
