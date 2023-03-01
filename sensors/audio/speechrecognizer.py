@@ -106,7 +106,7 @@ class SpeechRecognizer(Sensor):
             # logger.info("Nao is speaking, I'm not gonna listen")
             # time.sleep(0.5)
             if self.nao_interface.is_thinking:
-                if float(time.time()) - float(self.nao_interface.last_thinking_time) < 60:
+                if float(time.time()) - float(self.nao_interface.last_thinking_time) < 30:
                     return None
                 else:
                     pass
@@ -166,9 +166,9 @@ class SpeechRecognizer(Sensor):
         # print(source_direction)
         # if source_direction=="Front":
 
-        # to_say = raw_input("Enter what to say:")
-        # return joinStrings([to_say, "50"],
-        #                      Constants.STRING_SEPARATOR_INNER)
+        to_say = raw_input("Enter what to say:")
+        return joinStrings([to_say, "50"],
+                             Constants.STRING_SEPARATOR_INNER)
 
         if not self.last_detected_speech is None:
             if not self.virtual:

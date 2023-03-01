@@ -27,7 +27,23 @@ lastImage = None
 data_folder = "../data/"
 
 # set of 80 class labels
-class_labels = ["helmet"]
+class_labels = ["person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck",
+                                     "boat",
+                                     "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird",
+                                     "cat",
+                                     "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack",
+                                     "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard",
+                                     "sports ball",
+                                     "kite", "baseball bat", "baseball glove", "skateboard", "surfboard",
+                                     "tennis racket",
+                                     "bottle", "wineglass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple",
+                                     "sandwich", "orange", "broccoli", "carrot", "hotdog", "pizza", "donut", "cake",
+                                     "chair",
+                                     "sofa", "plant", "bed", "dining table", "toilet", "tv monitor", "laptop", "mouse",
+                                     "remote", "keyboard", "cellphone", "microwave", "oven", "toaster", "sink",
+                                     "refrigerator",
+                                     "piece of paper", "clock", "vase", "scissors", "teddy bear", "hair drier",
+                                     "toothbrush"]
 
 # Declare List of colors as an array
 # Green, Blue, Red, cyan, yellow, purple
@@ -41,7 +57,7 @@ class_colors = np.tile(class_colors, (16, 1))
 # Loading pretrained model
 # input preprocessed blob into model and pass through the model
 # obtain the detection predictions by the model using forward() method
-yolo_model = cv2.dnn.readNetFromDarknet(data_folder+'yolov3-hat.cfg', data_folder+'yolov3-hat_2400.weights')
+yolo_model = cv2.dnn.readNetFromDarknet(data_folder+'yolov3.cfg', data_folder+'yolov3.weights')
 
 # Get all layers from the yolo network
 # Loop and find the last layer (output layer) of the yolo network
