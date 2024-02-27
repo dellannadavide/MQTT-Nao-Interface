@@ -1,7 +1,31 @@
 # MQTT-Nao-Interface
 MQTT-Nao-Interface is a Python 2.7 resource that can be used to control a Nao robot via Python and that can receive commands (e.g., from [SONAR](https://github.com/dellannadavide/SONAR)) and publish data (e.g., captured via Nao's sensors) via MQTT.
 
-Below the steps required to install and run MQTT-Nao-Interface.
+Below the structure of this repository and the steps required to install and run MQTT-Nao-Interface.
+
+
+### Structure of this repository
+```
+MQTT-Nao-Interface
+└───actuators         # The actuator services that receive directives for the robot's actuators via MQTT
+│   actuator.py       # An abstract class implemented by all the actuators
+│
+└───lib               # Folder containing libraries used in the HRI experiments
+│                     # including library for PyQT,
+│                     # the Nao additional behaviors for emotions expression
+│                     # the vision recognition database
+└───sensors           # The sensor services that publish to MQTT topics data collected from robot's sensors
+│   sensor.py         # An abstract class implemented by all the sensors
+│
+└───utils             # Utilities for MQTT-Nao-Interface
+│
+│   README.md         # This file
+│   main.py           # Main file to run the MQTT-Nao-Interface. 
+│                     # It defines the services to be run and starts them                   
+│                     # It can be used both with the virtual robot and with the real robot                   
+│   requirements.txt  # The list of libraries required to setup and run the MQTT-Nao-Interface
+```
+
 
 ## 1. Nao Softbank software, installation and setup
 Software download page: https://www.aldebaran.com/fr/support/nao-6/downloads-softwares
