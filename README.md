@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7979416.svg)](https://doi.org/10.5281/zenodo.7979416)
+
 # MQTT-Nao-Interface: a Python 2.7 interface for the Nao robot based on MQTT
 MQTT-Nao-Interface is a Python 2.7 resource that can be used to control a Nao robot via Python and that can receive commands (e.g., from [SONAR](https://github.com/dellannadavide/SONAR)) and publish data (e.g., captured via Nao's sensors) via MQTT.
 
